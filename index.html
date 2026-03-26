@@ -1,0 +1,130 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Attack Console</title>
+<style>
+body{margin:0;background:black;color:#00ff66;font-family:Consolas,monospace;overflow:hidden}
+.container{padding:10px}
+h1{text-align:center;color:#00ffcc;text-shadow:0 0 15px #00ffcc}
+.input{width:100%;padding:10px;background:#001a00;border:1px solid #00ff66;color:#00ff66;border-radius:8px}
+.terminal{margin-top:10px;height:250px;overflow-y:auto;background:#000;border:1px solid #00ff66;border-radius:10px;padding:10px;box-shadow:0 0 20px #00ff66}
+.progress{margin-top:10px;height:12px;background:#003300;border-radius:6px;overflow:hidden}
+.bar{height:100%;width:0%;background:#00ff66}
+.btn{width:100%;margin-top:10px;padding:12px;background:#00ff66;border:none;border-radius:10px;font-weight:bold;cursor:pointer}
+.popup{position:absolute;width:260px;background:#001a00;border:1px solid #00ff66;border-radius:10px;box-shadow:0 0 20px #00ff66}
+.header{display:flex;justify-content:space-between;align-items:center;padding:5px 8px;cursor:move;background:#002200;border-bottom:1px solid #00ff66}
+.header span{font-size:12px}
+.controls button{background:none;border:none;color:#00ff66;cursor:pointer;margin-left:5px}
+.content{padding:8px}
+canvas{width:100%;height:80px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>⚡ CYBER ATTACK v11.0 ⚡</h1>
+<input id="target" class="input" placeholder="ENTER TARGET DOMAIN">
+<div class="terminal" id="terminal"></div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<button class="btn" onclick="startHack()">INITIATE BREACH</button>
+</div><script>
+const steps=["Initializing...","Scanning ports...","Bypassing firewall...","Injecting payload...","Decrypting...","Bruteforcing...","Accessing root...","Extracting data...","Finalizing..."]
+
+function r(){return Math.floor(Math.random()*255)}
+function fakeIP(){return `${r()}.${r()}.${r()}.${r()}`}
+function randPass(){return Math.random().toString(36).slice(2,12)}
+
+function createPopup(x,y){
+let pop=document.createElement("div")
+pop.className="popup"
+pop.style.left=x+"px"
+pop.style.top=y+"px"
+pop.innerHTML=`
+<div class="header">
+<span>COMPILER</span>
+<div class="controls">
+<button onclick="minimize(this)">_</button>
+<button onclick="closePop(this)">X</button>
+</div>
+</div>
+<div class="content">
+<canvas></canvas>
+</div>`
+
+document.body.appendChild(pop)
+drag(pop)
+startGraph(pop.querySelector("canvas"))
+}
+
+function minimize(btn){
+let content=btn.closest(".popup").querySelector(".content")
+content.style.display = content.style.display==="none"?"block":"none"
+}
+
+function closePop(btn){
+btn.closest(".popup").remove()
+}
+
+function drag(el){
+let offsetX=0,offsetY=0,isDown=false
+let header=el.querySelector(".header")
+header.onmousedown=e=>{isDown=true;offsetX=e.clientX-el.offsetLeft;offsetY=e.clientY-el.offsetTop}
+document.onmouseup=()=>isDown=false
+
+document.onmousemove=e=>{
+if(!isDown)return
+el.style.left=(e.clientX-offsetX)+"px"
+el.style.top=(e.clientY-offsetY)+"px"
+}
+}
+
+function startGraph(canvas){
+let ctx=canvas.getContext("2d")
+canvas.width=250
+canvas.height=80
+let data=Array(50).fill(40)
+
+setInterval(()=>{
+data.push(Math.random()*80)
+data.shift()
+ctx.clearRect(0,0,canvas.width,canvas.height)
+ctx.beginPath()
+data.forEach((v,i)=>{
+ctx.lineTo(i*5,80-v)
+})
+ctx.strokeStyle="#00ff66"
+ctx.stroke()
+},200)
+}
+
+function startHack(){
+const term=document.getElementById("terminal")
+const bar=document.getElementById("bar")
+const target=document.getElementById("target").value||"unknown"
+term.innerHTML=""
+let i=0,progress=0
+
+for(let p=0;p<4;p++) createPopup(60+p*40,120+p*30)
+
+const interval=setInterval(()=>{
+if(progress<100){progress+=Math.random()*6;if(progress>100)progress=100;bar.style.width=progress+"%"}
+
+if(i<steps.length){
+let line=document.createElement("div")
+line.textContent=`> [${target}] ${steps[i]}`
+term.appendChild(line)
+term.scrollTop=term.scrollHeight
+
+if(Math.random()>0.6) createPopup(Math.random()*window.innerWidth,Math.random()*window.innerHeight)
+
+i++
+}else{
+clearInterval(interval)
+let done=document.createElement("div")
+done.innerHTML=`<br>✔ ACCESS GRANTED<br>IP: ${fakeIP()}<br>PASSWORD: ${randPass()}`
+term.appendChild(done)
+}
+},500)
+}
+</script></body>
+</html>
